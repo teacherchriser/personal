@@ -1,0 +1,1785 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Feliz Cumple Noe</title>
+<link rel="icon" href="https://teacherchriser.github.io/images/me.gif" type="image/x-icon">
+
+<!--
+  STRANGER LETTERS — LANDSCAPE VERSION
+
+  Canvas en formato 16:9.
+  Diseñado para ocupar casi toda la pantalla disponible
+  de un laptop sin deformarse.
+
+  Para exportar GIF se utiliza gif.js desde jsDelivr.
+-->
+<style>
+@font-face {
+    font-family: 'Benguiat';
+    src: url('https://teacherchriser.github.io/tools/fonts/Benguiat-Bold.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+<!-- src: url('./MiFuente.ttf') format('truetype'); -->
+</style>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Special+Elite&display=swap" rel="stylesheet">
+
+<style>
+  * {
+    box-sizing: border-box;
+  }
+
+  html,
+  body {
+    margin: 0;
+    min-height: 100%;
+    background: #000;
+    color: #eee;
+    font-family: "Benguiat", serif;
+  }
+
+  body {
+    padding: 12px 18px;
+  }
+
+  .app {
+    width: min(1180px, 100%);
+    margin: 0 auto;
+  }
+
+  /* ==============================
+     TÍTULO
+     ============================== */
+
+  .page-title {
+    min-height: 92px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 4px 12px 12px;
+  }
+
+  .title-input {
+    width: min(900px, 96%);
+    background: transparent;
+    border: 0;
+    outline: 0;
+    color: #d71920;
+    text-align: center;
+    text-transform: uppercase;
+    font-family: "Benguiat", "Times New Roman", Georgia, serif;
+    font-weight: 700;
+    letter-spacing: .08em;
+	font-size: clamp(28px, 4.5vw, 38px);
+
+    text-shadow:
+      0 0 2px #ff3030,
+      0 0 8px rgba(210,0,0,.75),
+      0 0 22px rgba(150,0,0,.35);
+  }
+
+  .title-input::placeholder {
+    color: #4d1111;
+  }
+
+  .title-help {
+    margin-top: 2px;
+    color: #555;
+    font-size: 10px;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+  }
+
+  /* ==============================
+     CONTROLES
+     ============================== */
+
+  .controls {
+    display: grid;
+    grid-template-columns: 1fr auto auto auto auto;
+    gap: 7px;
+    padding: 9px;
+    margin-bottom: 9px;
+
+    background: #0b0b0b;
+    border: 1px solid #242424;
+    border-radius: 10px;
+  }
+
+  .controls input,
+  .controls select,
+  .controls button {
+    min-height: 38px;
+    border-radius: 6px;
+    border: 1px solid #333;
+    background: #111;
+    color: #eee;
+    padding: 0 11px;
+  }
+
+  .controls input {
+    width: 100%;
+  }
+
+  .controls button {
+    cursor: pointer;
+    font-weight: 700;
+  }
+
+  .controls button:hover {
+    background: #1c1c1c;
+    border-color: #666;
+  }
+
+  .message-label {
+    color: #aaa;
+    font-size: 11px;
+    grid-column: 1 / -1;
+    margin-bottom: -2px;
+  }
+
+  /* ==============================
+     CANVAS LANDSCAPE
+     ============================== */
+
+  .canvas-wrap {
+    width: 100%;
+
+    background: #000;
+
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+
+    overflow: hidden;
+
+    border: 1px solid #191919;
+
+    box-shadow:
+      0 0 40px rgba(255,255,255,.04);
+  }
+
+  canvas {
+    display: block;
+
+    /*
+      16:9
+
+      El canvas se limita tanto por el ancho
+      como por la altura disponible del laptop.
+
+      Esto evita que quede demasiado alto.
+    */
+    width: min(
+      100%,
+      calc((100vh - 225px) * 1.7777778)
+    );
+
+    max-width: 100%;
+
+    height: auto;
+
+    aspect-ratio: 16 / 9;
+
+    background: #000;
+  }
+
+  .status {
+    text-align: center;
+    color: #666;
+    font-size: 11px;
+    padding: 6px;
+  }
+
+  /* ==============================
+     PANTALLAS PEQUEÑAS
+     ============================== */
+
+  @media (max-width: 760px) {
+
+    body {
+      padding: 7px;
+    }
+
+    .page-title {
+      min-height: 75px;
+    }
+
+    .controls {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .message-label {
+      grid-column: 1 / -1;
+    }
+
+    .controls input {
+      grid-column: 1 / -1;
+    }
+
+    .title-help {
+      display: none;
+    }
+
+    canvas {
+      width: 100%;
+    }
+  }
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+  <!-- ==============================
+       TÍTULO
+       ============================== -->
+
+  <header class="page-title">
+
+    <input
+      id="titleInput"
+      class="title-input"
+      value="THE UPSIDE DOWN"
+      aria-label="Título de la página"
+      spellcheck="false">
+
+    <div class="title-help">
+      QUE CUMPLAS MUCHOS MÁS HIJA HERMOSA
+    </div>
+
+  </header>
+
+
+  <!-- ==============================
+       CONTROLES
+       ============================== -->
+
+  <section class="controls">
+
+    <div class="message-label">
+      ENVÍALE UN MENSAJE CORTO A NOELIA
+    </div>
+
+    <input
+      id="messageInput"
+      type="text"
+      maxlength="120"
+      value="WELCOME"
+      placeholder="Escribe un mensaje..."
+      aria-label="Mensaje">
+
+    <select id="speedInput" aria-label="Velocidad">
+
+      <option value="1200">
+        Lento
+      </option>
+
+      <option value="750" selected>
+        Normal
+      </option>
+
+      <option value="420">
+        Rápido
+      </option>
+
+      <option value="220">
+        Muy rápido
+      </option>
+
+    </select>
+
+    <button id="startBtn">
+      ▶ Iniciar
+    </button>
+
+    <button id="pauseBtn">
+      Ⅱ Pausar
+    </button>
+
+    <button id="clearBtn">
+      ✕ Limpiar
+    </button>
+
+    <button id="gifBtn">
+      GIF
+    </button>
+
+  </section>
+
+
+  <!-- ==============================
+       CANVAS
+       ============================== -->
+
+  <div class="canvas-wrap">
+
+    <canvas id="wall"></canvas>
+
+  </div>
+
+
+  <div id="status" class="status">
+    Listo.
+  </div>
+
+</div>
+
+
+<!-- GIF encoder -->
+<script src="https://cdn.jsdelivr.net/npm/gif.js@0.2.0/dist/gif.js"></script>
+
+
+<script>
+
+/* ============================================================
+   CONFIGURACIÓN
+   ============================================================ */
+
+const DEFAULT_TITLE = "HAPPY BIRTHDAY NOELIA";
+
+const ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
+
+/* Colores de las bombillas */
+
+const BULB_COLORS = [
+  "#ff2020",
+  "#ffd52e",
+  "#39ff6a",
+  "#42dfff",
+  "#fff4d0",
+  "#ff8a21"
+];
+
+
+const canvas = document.getElementById("wall");
+const ctx = canvas.getContext("2d");
+
+const titleInput =
+  document.getElementById("titleInput");
+
+const messageInput =
+  document.getElementById("messageInput");
+
+const speedInput =
+  document.getElementById("speedInput");
+
+const startBtn =
+  document.getElementById("startBtn");
+
+const pauseBtn =
+  document.getElementById("pauseBtn");
+
+const clearBtn =
+  document.getElementById("clearBtn");
+
+const gifBtn =
+  document.getElementById("gifBtn");
+
+const statusEl =
+  document.getElementById("status");
+
+
+titleInput.value = DEFAULT_TITLE;
+
+
+/* ============================================================
+   CANVAS INTERNO
+   ============================================================
+
+   ANTES:
+
+   1100 x 1220
+
+   AHORA:
+
+   1200 x 675
+
+   Relación 16:9 — landscape
+*/
+
+const W = 1200;
+const H = 675;
+
+canvas.width = W;
+canvas.height = H;
+
+
+/* ============================================================
+   POSICIONES DEL ALFABETO
+   ============================================================ */
+
+const letterPositions = {};
+const activeLetters = new Map();
+
+
+/*
+  Tres filas horizontales.
+
+  Cada fila tiene suficiente espacio para que
+  las letras se puedan iluminar sin amontonarse.
+*/
+
+const rows = [
+  ALPHABET.slice(0, 9),
+  ALPHABET.slice(9, 18),
+  ALPHABET.slice(18, 26)
+];
+
+
+function buildLetterPositions() {
+
+  /*
+    Posiciones verticales adaptadas al canvas 16:9.
+  */
+
+  const rowY = [
+    365,
+    475,
+    585
+  ];
+
+
+  rows.forEach((row, r) => {
+
+    const count = row.length;
+
+    const left = 90;
+    const right = 1110;
+
+    const gap =
+      count === 1
+        ? 0
+        : (right - left) / (count - 1);
+
+
+    [...row].forEach((letter, i) => {
+
+      letterPositions[letter] = {
+
+        x: left + i * gap,
+
+        y: rowY[r],
+
+        color:
+          BULB_COLORS[
+            (i + r * 2) %
+            BULB_COLORS.length
+          ],
+
+        row: r
+
+      };
+
+    });
+
+  });
+
+}
+
+
+buildLetterPositions();
+
+
+/* ============================================================
+   ANIMACIÓN
+   ============================================================ */
+
+let running = false;
+let currentIndex = 0;
+let message = "";
+let nextStep = 0;
+let lastTime = 0;
+let raf = null;
+
+
+function cleanMessage(value) {
+
+  return value
+    .toUpperCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .split("")
+    .filter(
+      ch =>
+        ALPHABET.includes(ch) ||
+        ch === " "
+    )
+    .join("");
+
+}
+
+
+function resetAnimation() {
+
+  message =
+    cleanMessage(
+      messageInput.value
+    );
+
+  currentIndex = 0;
+
+  activeLetters.clear();
+
+  nextStep = 0;
+
+}
+
+
+function startAnimation() {
+
+  resetAnimation();
+
+  running = true;
+
+  statusEl.textContent =
+    message
+      ? `Mostrando: ${message}`
+      : "Escribe un mensaje.";
+
+  lastTime =
+    performance.now();
+
+  if (!raf) {
+
+    raf =
+      requestAnimationFrame(
+        animate
+      );
+
+  }
+
+}
+
+
+function pauseAnimation() {
+
+  running = false;
+
+  statusEl.textContent =
+    "Pausado.";
+
+}
+
+
+function clearAnimation() {
+
+  running = false;
+
+  resetAnimation();
+
+  statusEl.textContent =
+    "Limpiado.";
+
+}
+
+
+function advanceMessage(now) {
+
+  if (!message) return;
+
+  if (now < nextStep) return;
+
+
+  if (
+    currentIndex <
+    message.length
+  ) {
+
+    const char =
+      message[currentIndex];
+
+
+    if (char === " ") {
+
+      currentIndex++;
+
+      nextStep =
+        now +
+        Number(speedInput.value) *
+        0.55;
+
+      return;
+
+    }
+
+
+    const p =
+      letterPositions[char];
+
+
+    if (p) {
+
+      activeLetters.set(
+        char,
+        {
+          until:
+            now +
+            Number(speedInput.value) *
+            1.7,
+
+          color:
+            p.color,
+
+          pulse:
+            Math.random() *
+            Math.PI *
+            2
+        }
+      );
+
+    }
+
+
+    currentIndex++;
+
+    nextStep =
+      now +
+      Number(speedInput.value);
+
+  }
+
+  else {
+
+    if (
+      now >
+      nextStep + 1200
+    ) {
+
+      currentIndex = 0;
+
+      activeLetters.clear();
+
+      nextStep =
+        now + 500;
+
+    }
+
+  }
+
+}
+
+
+/* ============================================================
+   DIBUJO
+   ============================================================ */
+
+function drawWoodWall() {
+
+  /* Fondo negro */
+
+  ctx.fillStyle = "#000";
+
+  ctx.fillRect(
+    0,
+    0,
+    W,
+    H
+  );
+
+
+  /*
+    La pared ocupa prácticamente
+    todo el canvas.
+  */
+
+  const wallTop = 120;
+
+  const wallBottom = H;
+
+
+  const grad =
+    ctx.createLinearGradient(
+      0,
+      wallTop,
+      W,
+      wallBottom
+    );
+
+
+  grad.addColorStop(
+    0,
+    "#2b170e"
+  );
+
+  grad.addColorStop(
+    .45,
+    "#3a2112"
+  );
+
+  grad.addColorStop(
+    1,
+    "#170c08"
+  );
+
+
+  ctx.fillStyle = grad;
+
+  ctx.fillRect(
+    40,
+    wallTop,
+    W - 80,
+    wallBottom - wallTop
+  );
+
+
+  /* Tablas verticales */
+
+  ctx.globalAlpha = .32;
+
+  ctx.strokeStyle = "#080504";
+
+  ctx.lineWidth = 2;
+
+
+  for (
+    let x = 50;
+    x < W - 40;
+    x += 73
+  ) {
+
+    ctx.beginPath();
+
+    ctx.moveTo(
+      x,
+      wallTop
+    );
+
+    ctx.lineTo(
+      x,
+      wallBottom
+    );
+
+    ctx.stroke();
+
+  }
+
+
+  /* Vetas */
+
+  ctx.globalAlpha = .18;
+
+  ctx.lineWidth = 3;
+
+
+  for (
+    let y = wallTop + 70;
+    y < wallBottom;
+    y += 125
+  ) {
+
+    ctx.beginPath();
+
+    ctx.moveTo(
+      45,
+      y
+    );
+
+    ctx.bezierCurveTo(
+      300,
+      y - 18,
+      800,
+      y + 22,
+      1155,
+      y - 5
+    );
+
+    ctx.stroke();
+
+  }
+
+
+  ctx.globalAlpha = 1;
+
+
+  /* Bordes */
+
+  ctx.strokeStyle =
+    "#0b0705";
+
+  ctx.lineWidth = 8;
+
+
+  ctx.strokeRect(
+    40,
+    wallTop,
+    W - 80,
+    wallBottom - wallTop
+  );
+
+}
+
+
+/* ============================================================
+   CUERDAS
+   ============================================================ */
+
+function drawString(
+  x1,
+  y1,
+  x2,
+  y2,
+  sag,
+  seed
+) {
+
+  ctx.beginPath();
+
+  ctx.moveTo(
+    x1,
+    y1
+  );
+
+
+  const midX =
+    (x1 + x2) / 2;
+
+  const midY =
+    (y1 + y2) / 2 + sag;
+
+
+  ctx.quadraticCurveTo(
+    midX,
+    midY,
+    x2,
+    y2
+  );
+
+
+  ctx.strokeStyle =
+    "rgba(0,0,0,.75)";
+
+  ctx.lineWidth = 4;
+
+  ctx.stroke();
+
+}
+
+
+/* ============================================================
+   BOMBILLA
+   ============================================================ */
+
+function drawBulb(
+  x,
+  y,
+  color,
+  phase = 0,
+  intensity = 1
+) {
+
+  const pulse =
+    .78 +
+    Math.sin(
+      animationTime / 260 +
+      phase
+    ) * .10;
+
+
+  const radius =
+    7.5 * pulse;
+
+
+  ctx.save();
+
+
+  ctx.globalCompositeOperation =
+    "lighter";
+
+
+  const glow =
+    ctx.createRadialGradient(
+      x,
+      y,
+      0,
+      x,
+      y,
+      42
+    );
+
+
+  glow.addColorStop(
+    0,
+    hexToRgba(
+      color,
+      .9 * intensity
+    )
+  );
+
+
+  glow.addColorStop(
+    .18,
+    hexToRgba(
+      color,
+      .45 * intensity
+    )
+  );
+
+
+  glow.addColorStop(
+    1,
+    hexToRgba(
+      color,
+      0
+    )
+  );
+
+
+  ctx.fillStyle = glow;
+
+
+  ctx.beginPath();
+
+  ctx.arc(
+    x,
+    y,
+    42,
+    0,
+    Math.PI * 2
+  );
+
+  ctx.fill();
+
+
+  ctx.fillStyle =
+    hexToRgba(
+      color,
+      Math.min(
+        1,
+        .98 * intensity
+      )
+    );
+
+
+  ctx.beginPath();
+
+  ctx.arc(
+    x,
+    y,
+    radius,
+    0,
+    Math.PI * 2
+  );
+
+  ctx.fill();
+
+
+  ctx.restore();
+
+}
+
+
+function hexToRgba(
+  hex,
+  a
+) {
+
+  const n =
+    parseInt(
+      hex.slice(1),
+      16
+    );
+
+
+  const r =
+    (n >> 16) & 255;
+
+  const g =
+    (n >> 8) & 255;
+
+  const b =
+    n & 255;
+
+
+  return `rgba(${r},${g},${b},${a})`;
+
+}
+
+
+/* ============================================================
+   LUCES
+   ============================================================ */
+
+function drawStringLights() {
+
+  const strings = [
+
+    {
+      x1: 65,
+      y1: 175,
+      x2: 1135,
+      y2: 200,
+      sag: 48
+    },
+
+    {
+      x1: 75,
+      y1: 245,
+      x2: 1125,
+      y2: 220,
+      sag: 42
+    },
+
+    {
+      x1: 90,
+      y1: 180,
+      x2: 1110,
+      y2: 275,
+      sag: 60
+    }
+
+  ];
+
+
+  strings.forEach(
+    s =>
+      drawString(
+        s.x1,
+        s.y1,
+        s.x2,
+        s.y2,
+        s.sag
+      )
+  );
+
+
+  const bulbs = [
+
+    [90,175],
+    [175,185],
+    [265,192],
+    [355,195],
+    [445,198],
+    [535,200],
+    [625,201],
+    [715,202],
+    [805,204],
+    [895,205],
+    [985,207],
+    [1075,205],
+
+    [110,245],
+    [205,250],
+    [305,253],
+    [405,250],
+    [505,246],
+    [605,242],
+    [705,238],
+    [805,234],
+    [905,230],
+    [1005,225],
+    [1100,220],
+
+    [140,195],
+    [240,215],
+    [340,225],
+    [440,235],
+    [540,245],
+    [640,255],
+    [740,265],
+    [840,275],
+    [940,282],
+    [1040,288]
+
+  ];
+
+
+  bulbs.forEach(
+    (b, i) => {
+
+      drawBulb(
+        b[0],
+        b[1],
+        BULB_COLORS[
+          i %
+          BULB_COLORS.length
+        ],
+        i * .8,
+        .9
+      );
+
+    }
+  );
+
+}
+
+
+/* ============================================================
+   ALFABETO
+   ============================================================ */
+
+function drawAlphabet() {
+
+  ctx.textAlign = "center";
+
+  ctx.textBaseline = "middle";
+
+
+  /*
+    La letra se reduce ligeramente respecto
+    a la versión vertical para que las tres
+    filas tengan espacio.
+  */
+
+  ctx.font =
+    'bold 78px "Courier New", monospace';
+
+
+  Object.entries(
+    letterPositions
+  ).forEach(
+    ([letter, p]) => {
+
+      const a =
+        activeLetters.get(
+          letter
+        );
+
+
+      const active =
+        !!a;
+
+
+      ctx.save();
+
+
+      ctx.translate(
+        p.x,
+        p.y
+      );
+
+
+      /* sombra */
+
+      ctx.fillStyle =
+        "#050403";
+
+      ctx.globalAlpha =
+        .9;
+
+
+      ctx.fillText(
+        letter,
+        4,
+        8
+      );
+
+
+      if (active) {
+
+        const pulse =
+          .72 +
+          Math.sin(
+            animationTime / 95 +
+            a.pulse
+          ) * .20;
+
+
+        ctx.globalCompositeOperation =
+          "lighter";
+
+
+        const glow =
+          ctx.createRadialGradient(
+            0,
+            0,
+            2,
+            0,
+            0,
+            90
+          );
+
+
+        glow.addColorStop(
+          0,
+          hexToRgba(
+            a.color,
+            .72 * pulse
+          )
+        );
+
+
+        glow.addColorStop(
+          .28,
+          hexToRgba(
+            a.color,
+            .28 * pulse
+          )
+        );
+
+
+        glow.addColorStop(
+          1,
+          hexToRgba(
+            a.color,
+            0
+          )
+        );
+
+
+        ctx.fillStyle =
+          glow;
+
+
+        ctx.beginPath();
+
+        ctx.arc(
+          0,
+          0,
+          90,
+          0,
+          Math.PI * 2
+        );
+
+        ctx.fill();
+
+
+        ctx.globalCompositeOperation =
+          "source-over";
+
+
+        ctx.fillStyle =
+          "#fff2d2";
+
+
+        ctx.shadowColor =
+          a.color;
+
+        ctx.shadowBlur =
+          24;
+
+
+        ctx.fillText(
+          letter,
+          0,
+          0
+        );
+
+
+        /*
+          Bombilla sobre la letra
+        */
+
+        drawBulb(
+          0,
+          -47,
+          a.color,
+          a.pulse,
+          pulse
+        );
+
+
+      } else {
+
+        ctx.fillStyle =
+          "#17110d";
+
+        ctx.shadowColor =
+          "#000";
+
+        ctx.shadowBlur =
+          2;
+
+
+        ctx.fillText(
+          letter,
+          0,
+          0
+        );
+
+      }
+
+
+      ctx.restore();
+
+    }
+  );
+
+}
+
+
+/* ============================================================
+   TEXTO INTERNO
+   ============================================================ */
+
+function drawHeaderInsideCanvas() {
+
+  ctx.textAlign =
+    "center";
+
+
+  ctx.fillStyle =
+    "rgba(255,235,205,.62)";
+
+
+  ctx.font =
+    '16px "Special Elite", monospace';
+
+
+  ctx.fillText(
+    "FELIZ CUMPLE NOELIA",
+    W / 2,
+    145
+  );
+
+}
+
+
+/* ============================================================
+   ANIMACIÓN PRINCIPAL
+   ============================================================ */
+
+let animationTime = 0;
+
+
+function drawScene() {
+
+  drawWoodWall();
+
+  drawStringLights();
+
+  drawHeaderInsideCanvas();
+
+  drawAlphabet();
+
+}
+
+
+function animate(now) {
+
+  animationTime = now;
+
+
+  if (running) {
+
+    advanceMessage(now);
+
+
+    /*
+      Elimina letras cuya iluminación terminó
+    */
+
+    for (
+      const [
+        letter,
+        data
+      ]
+      of activeLetters.entries()
+    ) {
+
+      if (
+        now > data.until
+      ) {
+
+        activeLetters.delete(
+          letter
+        );
+
+      }
+
+    }
+
+  }
+
+
+  drawScene();
+
+
+  raf =
+    requestAnimationFrame(
+      animate
+    );
+
+}
+
+
+/* ============================================================
+   EXPORTACIÓN PNG
+   ============================================================ */
+
+function downloadPNG() {
+
+  const link =
+    document.createElement(
+      "a"
+    );
+
+
+  link.download =
+    "stranger-letters.png";
+
+
+  link.href =
+    canvas.toDataURL(
+      "image/png"
+    );
+
+
+  link.click();
+
+}
+
+
+/* ============================================================
+   EXPORTACIÓN GIF
+   ============================================================ */
+
+async function exportGIF() {
+
+  if (
+    typeof GIF === "undefined"
+  ) {
+
+    alert(
+      "No se pudo cargar el generador GIF. Revisa tu conexión a Internet."
+    );
+
+    return;
+
+  }
+
+
+  const oldRunning =
+    running;
+
+
+  running = false;
+
+
+  const clean =
+    cleanMessage(
+      messageInput.value
+    );
+
+
+  if (!clean) {
+
+    alert(
+      "Escribe primero un mensaje."
+    );
+
+    running =
+      oldRunning;
+
+    return;
+
+  }
+
+
+  gifBtn.disabled =
+    true;
+
+
+  gifBtn.textContent =
+    "CREANDO...";
+
+
+  /*
+    GIF en formato 16:9
+  */
+
+  const gif =
+    new GIF({
+
+      workers: 2,
+
+      quality: 10,
+
+      width: W,
+
+      height: H,
+
+      workerScript:
+        "https://cdn.jsdelivr.net/npm/gif.js@0.2.0/dist/gif.worker.js"
+
+    });
+
+
+  const savedMessage =
+    message;
+
+  const savedIndex =
+    currentIndex;
+
+  const savedActive =
+    new Map(
+      activeLetters
+    );
+
+
+  message = clean;
+
+  currentIndex = 0;
+
+  activeLetters.clear();
+
+
+  const totalFrames = 48;
+
+  const frameDelay = 120;
+
+  let fakeTime =
+    performance.now();
+
+
+  for (
+    let i = 0;
+    i < totalFrames;
+    i++
+  ) {
+
+    fakeTime +=
+      frameDelay;
+
+
+    advanceMessage(
+      fakeTime
+    );
+
+
+    for (
+      const [
+        letter,
+        data
+      ]
+      of activeLetters.entries()
+    ) {
+
+      if (
+        fakeTime >
+        data.until
+      ) {
+
+        activeLetters.delete(
+          letter
+        );
+
+      }
+
+    }
+
+
+    animationTime =
+      fakeTime;
+
+
+    drawScene();
+
+
+    gif.addFrame(
+      ctx,
+      {
+        copy: true,
+        delay: frameDelay
+      }
+    );
+
+  }
+
+
+  statusEl.textContent =
+    "Renderizando GIF...";
+
+
+  gif.on(
+    "progress",
+    p => {
+
+      statusEl.textContent =
+        `Creando GIF: ${Math.round(p * 100)}%`;
+
+    }
+  );
+
+
+  gif.on(
+    "finished",
+    blob => {
+
+      const url =
+        URL.createObjectURL(
+          blob
+        );
+
+
+      const a =
+        document.createElement(
+          "a"
+        );
+
+
+      a.href = url;
+
+      a.download =
+        "stranger-letters.gif";
+
+
+      a.click();
+
+
+      setTimeout(
+        () =>
+          URL.revokeObjectURL(
+            url
+          ),
+        5000
+      );
+
+
+      gifBtn.disabled =
+        false;
+
+
+      gifBtn.textContent =
+        "GIF";
+
+
+      statusEl.textContent =
+        "GIF creado.";
+
+
+      message =
+        savedMessage;
+
+
+      currentIndex =
+        savedIndex;
+
+
+      activeLetters.clear();
+
+
+      savedActive.forEach(
+        (v, k) =>
+          activeLetters.set(
+            k,
+            v
+          )
+      );
+
+
+      running =
+        oldRunning;
+
+    }
+  );
+
+
+  gif.on(
+    "abort",
+    () => {
+
+      gifBtn.disabled =
+        false;
+
+      gifBtn.textContent =
+        "GIF";
+
+      statusEl.textContent =
+        "Exportación cancelada.";
+
+      running =
+        oldRunning;
+
+    }
+  );
+
+
+  gif.render();
+
+}
+
+
+/* ============================================================
+   EVENTOS
+   ============================================================ */
+
+startBtn.addEventListener(
+  "click",
+  startAnimation
+);
+
+
+pauseBtn.addEventListener(
+  "click",
+  pauseAnimation
+);
+
+
+clearBtn.addEventListener(
+  "click",
+  clearAnimation
+);
+
+
+gifBtn.addEventListener(
+  "click",
+  exportGIF
+);
+
+
+messageInput.addEventListener(
+  "keydown",
+  e => {
+
+    if (
+      e.key === "Enter"
+    ) {
+
+      startAnimation();
+
+    }
+
+  }
+);
+
+
+titleInput.addEventListener(
+  "input",
+  () => {
+
+    /* El título HTML se actualiza automáticamente */
+
+  }
+);
+
+
+window.addEventListener(
+  "beforeunload",
+  () => {
+
+    if (raf) {
+
+      cancelAnimationFrame(
+        raf
+      );
+
+    }
+
+  }
+);
+
+
+/* ============================================================
+   ARRANQUE
+   ============================================================ */
+
+drawScene();
+
+raf =
+  requestAnimationFrame(
+    animate
+  );
+
+</script>
+
+</body>
+</html>
